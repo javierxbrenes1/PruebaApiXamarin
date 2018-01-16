@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FutbolitoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Apuestas">
+    <Key>
+      <PropertyRef Name="idApuesta" />
+    </Key>
+    <Property Name="idApuesta" Type="int" Nullable="false" />
+    <Property Name="jornada" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="equipo1" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="equipo2" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="finalizado" Type="smallint" Nullable="false" />
+    <Property Name="detalle" Type="varchar(max)" Nullable="false" />
+    <Property Name="resultado1" Type="int" />
+    <Property Name="resultado2" Type="int" />
+    <Property Name="valor" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Equipo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="imagen" Type="image" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="idUsuario" />
+    </Key>
+    <Property Name="idUsuario" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="pass" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="foto" Type="image" Nullable="false" />
+    <Property Name="puntaje" Type="int" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UsuarioApuesta">
+    <Key>
+      <PropertyRef Name="idUsuario" />
+      <PropertyRef Name="idApuesta" />
+    </Key>
+    <Property Name="idUsuario" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="idApuesta" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="resultado1" Type="int" />
+    <Property Name="resultado2" Type="int" />
+    <Property Name="Ganador" Type="smallint" />
+  </EntityType>
+  <Association Name="FK_Apuestas_Equipo">
+    <End Role="Equipo" Type="Self.Equipo" Multiplicity="1" />
+    <End Role="Apuestas" Type="Self.Apuestas" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Apuestas">
+        <PropertyRef Name="equipo1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Apuestas_Equipo1">
+    <End Role="Equipo" Type="Self.Equipo" Multiplicity="1" />
+    <End Role="Apuestas" Type="Self.Apuestas" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Apuestas">
+        <PropertyRef Name="equipo2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsuarioApuesta_Apuestas">
+    <End Role="Apuestas" Type="Self.Apuestas" Multiplicity="0..1" />
+    <End Role="UsuarioApuesta" Type="Self.UsuarioApuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Apuestas">
+        <PropertyRef Name="idApuesta" />
+      </Principal>
+      <Dependent Role="UsuarioApuesta">
+        <PropertyRef Name="resultado2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsuarioApuesta_Usuario">
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+    <End Role="UsuarioApuesta" Type="Self.UsuarioApuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuario">
+        <PropertyRef Name="idUsuario" />
+      </Principal>
+      <Dependent Role="UsuarioApuesta">
+        <PropertyRef Name="idUsuario" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="FutbolitoModelStoreContainer">
+    <EntitySet Name="Apuestas" EntityType="Self.Apuestas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Equipo" EntityType="Self.Equipo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsuarioApuesta" EntityType="Self.UsuarioApuesta" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Apuestas_Equipo" Association="Self.FK_Apuestas_Equipo">
+      <End Role="Equipo" EntitySet="Equipo" />
+      <End Role="Apuestas" EntitySet="Apuestas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Apuestas_Equipo1" Association="Self.FK_Apuestas_Equipo1">
+      <End Role="Equipo" EntitySet="Equipo" />
+      <End Role="Apuestas" EntitySet="Apuestas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsuarioApuesta_Apuestas" Association="Self.FK_UsuarioApuesta_Apuestas">
+      <End Role="Apuestas" EntitySet="Apuestas" />
+      <End Role="UsuarioApuesta" EntitySet="UsuarioApuesta" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsuarioApuesta_Usuario" Association="Self.FK_UsuarioApuesta_Usuario">
+      <End Role="Usuario" EntitySet="Usuario" />
+      <End Role="UsuarioApuesta" EntitySet="UsuarioApuesta" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FutbolitoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Apuesta">
+    <Key>
+      <PropertyRef Name="idApuesta" />
+    </Key>
+    <Property Name="idApuesta" Type="Int32" Nullable="false" />
+    <Property Name="jornada" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="equipo1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="equipo2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="finalizado" Type="Int16" Nullable="false" />
+    <Property Name="detalle" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="resultado1" Type="Int32" />
+    <Property Name="resultado2" Type="Int32" />
+    <Property Name="valor" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Equipo" Relationship="Self.FK_Apuestas_Equipo" FromRole="Apuestas" ToRole="Equipo" />
+    <NavigationProperty Name="Equipo3" Relationship="Self.FK_Apuestas_Equipo1" FromRole="Apuestas" ToRole="Equipo" />
+    <NavigationProperty Name="UsuarioApuestas" Relationship="Self.FK_UsuarioApuesta_Apuestas" FromRole="Apuestas" ToRole="UsuarioApuesta" />
+  </EntityType>
+  <EntityType Name="Equipo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="imagen" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <NavigationProperty Name="Apuestas" Relationship="Self.FK_Apuestas_Equipo" FromRole="Equipo" ToRole="Apuestas" />
+    <NavigationProperty Name="Apuestas1" Relationship="Self.FK_Apuestas_Equipo1" FromRole="Equipo" ToRole="Apuestas" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="idUsuario" />
+    </Key>
+    <Property Name="idUsuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="pass" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="foto" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="puntaje" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="UsuarioApuestas" Relationship="Self.FK_UsuarioApuesta_Usuario" FromRole="Usuario" ToRole="UsuarioApuesta" />
+  </EntityType>
+  <EntityType Name="UsuarioApuesta">
+    <Key>
+      <PropertyRef Name="idUsuario" />
+      <PropertyRef Name="idApuesta" />
+    </Key>
+    <Property Name="idUsuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="idApuesta" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="resultado1" Type="Int32" />
+    <Property Name="resultado2" Type="Int32" />
+    <Property Name="Ganador" Type="Int16" />
+    <NavigationProperty Name="Apuesta" Relationship="Self.FK_UsuarioApuesta_Apuestas" FromRole="UsuarioApuesta" ToRole="Apuestas" />
+    <NavigationProperty Name="Usuario" Relationship="Self.FK_UsuarioApuesta_Usuario" FromRole="UsuarioApuesta" ToRole="Usuario" />
+  </EntityType>
+  <Association Name="FK_Apuestas_Equipo">
+    <End Role="Equipo" Type="Self.Equipo" Multiplicity="1" />
+    <End Role="Apuestas" Type="Self.Apuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Apuestas">
+        <PropertyRef Name="equipo1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Apuestas_Equipo1">
+    <End Role="Equipo" Type="Self.Equipo" Multiplicity="1" />
+    <End Role="Apuestas" Type="Self.Apuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Apuestas">
+        <PropertyRef Name="equipo2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsuarioApuesta_Apuestas">
+    <End Role="Apuestas" Type="Self.Apuesta" Multiplicity="0..1" />
+    <End Role="UsuarioApuesta" Type="Self.UsuarioApuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Apuestas">
+        <PropertyRef Name="idApuesta" />
+      </Principal>
+      <Dependent Role="UsuarioApuesta">
+        <PropertyRef Name="resultado2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsuarioApuesta_Usuario">
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+    <End Role="UsuarioApuesta" Type="Self.UsuarioApuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuario">
+        <PropertyRef Name="idUsuario" />
+      </Principal>
+      <Dependent Role="UsuarioApuesta">
+        <PropertyRef Name="idUsuario" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FutbolitoEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Apuestas" EntityType="Self.Apuesta" />
+    <EntitySet Name="Equipoes" EntityType="Self.Equipo" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuario" />
+    <EntitySet Name="UsuarioApuestas" EntityType="Self.UsuarioApuesta" />
+    <AssociationSet Name="FK_Apuestas_Equipo" Association="Self.FK_Apuestas_Equipo">
+      <End Role="Equipo" EntitySet="Equipoes" />
+      <End Role="Apuestas" EntitySet="Apuestas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Apuestas_Equipo1" Association="Self.FK_Apuestas_Equipo1">
+      <End Role="Equipo" EntitySet="Equipoes" />
+      <End Role="Apuestas" EntitySet="Apuestas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsuarioApuesta_Apuestas" Association="Self.FK_UsuarioApuesta_Apuestas">
+      <End Role="Apuestas" EntitySet="Apuestas" />
+      <End Role="UsuarioApuesta" EntitySet="UsuarioApuestas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsuarioApuesta_Usuario" Association="Self.FK_UsuarioApuesta_Usuario">
+      <End Role="Usuario" EntitySet="Usuarios" />
+      <End Role="UsuarioApuesta" EntitySet="UsuarioApuestas" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(FutbolitoModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(FutbolitoModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>
